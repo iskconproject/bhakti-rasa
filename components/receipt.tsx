@@ -61,4 +61,7 @@ const Receipt = React.forwardRef<HTMLDivElement, Props>(({ orderDetails }, ref) 
   );
 });
 
+Receipt.displayName = 'Receipt';
+
 export default Receipt;
+

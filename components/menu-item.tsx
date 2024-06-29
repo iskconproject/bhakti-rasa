@@ -3,11 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Minus, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCartStore } from "@/store/cartStore";
-import { MenuItem } from "@/models/menu-item.model";
+import { MenuItem as MenuItemType } from "@/models/menu-item.model";
 import { Input } from "@/components/ui/input";
 
 type Props = {
-  item: MenuItem;
+  item: MenuItemType;
 };
 
 const MenuItem: React.FC<Props> = ({ item }) => {
