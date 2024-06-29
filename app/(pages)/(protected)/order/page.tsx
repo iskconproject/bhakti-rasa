@@ -15,7 +15,7 @@ type State = {
 };
 
 const OrderPage = () => {
-  const { items, getSubTotal } = useCartStore();
+  const { items, getSubTotal, clearCart } = useCartStore();
 
   const reducer = (state: State, action: { type: string; payload: any }) => {
     switch (action.type) {
@@ -75,6 +75,10 @@ const OrderPage = () => {
         onOpenChange={() =>
           dispatch({ type: "HIDE_PLACE_ORDER", payload: null })
         }
+        onPlaceOrder={() => {
+          dispatch({ type: "HIDE_PLACE_ORDER", payload: null });
+          clearCart();
+        }}
       />
     </main>
   );

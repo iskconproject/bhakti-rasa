@@ -11,8 +11,9 @@ import PlaceOrderForm from "./place-order-form";
 type Props = {
   open: boolean;
   side?: "top" | "right" | "bottom" | "left";
-  onOpenChange?: (open: boolean) => void;
   className?: string;
+  onOpenChange?: (open: boolean) => void;
+  onPlaceOrder?: () => void;
 };
 
 const PlaceOrder: React.FC<Props> = ({
@@ -20,15 +21,14 @@ const PlaceOrder: React.FC<Props> = ({
   side = "right",
   className,
   onOpenChange,
+  onPlaceOrder,
 }) => {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side={side} className={cn(className)}>
         <SheetHeader>
           <SheetTitle className="text-2xl">New Prasadam Order</SheetTitle>
-          <SheetDescription>
-            <PlaceOrderForm />
-          </SheetDescription>
+          <PlaceOrderForm onPrintComplete={onPlaceOrder} />
         </SheetHeader>
       </SheetContent>
     </Sheet>

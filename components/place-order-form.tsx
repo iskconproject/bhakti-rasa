@@ -9,18 +9,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
-import { Input } from "./ui/input";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "./ui/table";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { useCartStore } from "@/store/cartStore";
 import {
   Select,
@@ -28,10 +18,16 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
-import { Button } from "./ui/button";
-import Receipt from "./receipt";
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import Receipt from "@/components/receipt";
 import { useRef, useState } from "react";
+import { toast } from "sonner";
+
+type Props = {
+  onPrintComplete?: () => void;
+  onPrintCancel?: () => void;
+};
 
 const formSchema = z.object({
   name: z.string().regex(/^[a-zA-Z\s]+$/),
@@ -45,7 +41,7 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-const PlaceOrderForm: React.FC = () => {
+const PlaceOrderForm: React.FC<Props> = ({ onPrintComplete }) => {
   const [tokenNumber, setTokenNumber] = useState(
     Math.floor(Math.random() * 1000) + 1
   );
@@ -59,7 +55,10 @@ const PlaceOrderForm: React.FC = () => {
 
   const { items, getSubTotal } = useCartStore();
 
-  const onSubmit = (data: FormData) => {};
+  const onSubmit = (data: FormData) => {
+    if (!data.name || !data.contact || !data.paymentType) return;
+    handleSaveAndPrint();
+  };
 
   const devoteeName = placeOrderForm.watch("name");
   const contactNumber = placeOrderForm.watch("contact");
@@ -69,10 +68,16 @@ const PlaceOrderForm: React.FC = () => {
 
   const handlePrint = useReactToPrint({
     content: () => receiptRef.current,
+    onAfterPrint: () => {
+      onPrintComplete && onPrintComplete();
+      toast.success("Receipt printed successfully");
+    },
+    onPrintError: (error) => {
+      toast.error("Failed to print receipt");
+    },
   });
 
   const handleSaveAndPrint = () => {
-    // Perform any additional save logic here
     handlePrint();
   };
 
@@ -88,7 +93,7 @@ const PlaceOrderForm: React.FC = () => {
     devoteeName,
     contactNumber,
     paymentType,
-    tokenNumber
+    tokenNumber,
   };
 
   return (
@@ -97,7 +102,7 @@ const PlaceOrderForm: React.FC = () => {
         onSubmit={placeOrderForm.handleSubmit(onSubmit)}
         className="space-y-4"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-4 max-h-[60vh] overflow-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-4 max-h-[60vh] overflow-auto px-2">
           <div className="space-y-4 md:max-w-xl">
             <FormField
               control={placeOrderForm.control}
@@ -160,11 +165,7 @@ const PlaceOrderForm: React.FC = () => {
           </div>
         </div>
 
-        <Button
-          type="submit"
-          className="btn btn-primary"
-          onClick={handleSaveAndPrint}
-        >
+        <Button type="submit" className="btn btn-primary">
           Save and print receipt
         </Button>
       </form>

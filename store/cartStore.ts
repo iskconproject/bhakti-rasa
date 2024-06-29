@@ -1,5 +1,5 @@
 import { MenuItem } from "@/models/menu-item.model";
-import create from "zustand";
+import { create } from "zustand";
 
 type CartStore = {
   items: MenuItem[];
@@ -7,6 +7,7 @@ type CartStore = {
   updateItemQuantity: (id: number, quantity: number) => void;
   removeItem: (id: number) => void;
   getSubTotal: () => number;
+  clearCart: () => void;
 };
 
 export const useCartStore = create<CartStore>((set, get) => ({
@@ -35,4 +36,5 @@ export const useCartStore = create<CartStore>((set, get) => ({
     })),
   getSubTotal: () =>
     get().items.reduce((acc, item) => acc + item.price * item.quantity, 0),
+  clearCart: () => set({ items: [] }),
 }));

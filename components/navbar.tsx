@@ -11,9 +11,8 @@ const Navbar = () => {
         </Link>
         <div className="flex items-center gap-8">
           <ThemeToggle />
-          <Link href="/cart" className="text-white">
-            <CartMenu />
-          </Link>
+
+          <CartMenu />
         </div>
       </div>
     </nav>

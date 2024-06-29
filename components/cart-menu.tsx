@@ -9,7 +9,7 @@ const CartMenu = () => {
   const cartCount = items.reduce((total, item) => total + item.quantity, 0);
   return (
     <div className="relative">
-      <ShoppingCart />
+      <ShoppingCart className="text-white"/>
       {cartCount > 0 && (
         <Badge
           className="absolute -top-4 -right-4 rounded-full w-6 h-6 flex justify-center items-center"
