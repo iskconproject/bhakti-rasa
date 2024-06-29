@@ -6,10 +6,12 @@ import { useEffect, useReducer } from "react";
 import { MENU_ITEMS } from "@/data/menu-items";
 import FooterCartInfo from "@/components/footer-cart-info";
 import { useCartStore } from "@/store/cartStore";
+import PlaceOrder from "@/components/place-order";
 
 type State = {
   searchText: string;
   menuItems: { id: number; name: string }[];
+  showPlaceOrder: boolean;
 };
 
 const OrderPage = () => {
@@ -28,6 +30,10 @@ const OrderPage = () => {
             item.name.toLowerCase().includes(state.searchText.toLowerCase())
           ),
         };
+      case "SHOW_PLACE_ORDER":
+        return { ...state, showPlaceOrder: true };
+      case "HIDE_PLACE_ORDER":
+        return { ...state, showPlaceOrder: false };
       default:
         return state;
     }
@@ -36,6 +42,7 @@ const OrderPage = () => {
   const [state, dispatch] = useReducer(reducer, {
     searchText: "",
     menuItems: MENU_ITEMS || [],
+    showPlaceOrder: false,
   });
 
   useEffect(() => {
@@ -52,7 +59,23 @@ const OrderPage = () => {
         />
         <Menu className="mt-8" menuItems={state.menuItems} />
       </div>
-      {items.length > 0 && <FooterCartInfo subTotal={getSubTotal()} />}
+      {items.length > 0 && (
+        <FooterCartInfo
+          subTotal={getSubTotal()}
+          onClickPlaceOrder={() =>
+            dispatch({ type: "SHOW_PLACE_ORDER", payload: null })
+          }
+        />
+      )}
+
+      <PlaceOrder
+        open={state.showPlaceOrder}
+        side="bottom"
+        className="h-[80vh]"
+        onOpenChange={() =>
+          dispatch({ type: "HIDE_PLACE_ORDER", payload: null })
+        }
+      />
     </main>
   );
 };

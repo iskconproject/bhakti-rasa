@@ -4,6 +4,7 @@ import { Minus, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCartStore } from "@/store/cartStore";
 import { MenuItem } from "@/models/menu-item.model";
+import { Input } from "@/components/ui/input";
 
 type Props = {
   item: MenuItem;
@@ -34,7 +35,9 @@ const MenuItem: React.FC<Props> = ({ item }) => {
       )}
     >
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold">{name}</h3>
+        <h3 className="text-lg font-semibold">
+          {name} <span className="text-sm text-muted-foreground">(₹{price})</span>
+        </h3>
         {itemQuantity < 1 ? (
           <Button
             className="btn btn-primary"
@@ -46,21 +49,21 @@ const MenuItem: React.FC<Props> = ({ item }) => {
         ) : null}
 
         {itemQuantity > 0 ? (
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             <Button
-              className="btn btn-primary"
+              className="btn btn-primary p-2"
               variant={"outline"}
               onClick={() => handleUpdateQuantity(itemQuantity - 1)}
             >
-              <Minus />
+              <Minus className="w-4 h-4"/>
             </Button>
-            <span>{itemQuantity}</span>
+            <Input value={itemQuantity} onChange={(e) => handleUpdateQuantity(+e.target.value)} className="w-10" />
             <Button
-              className="btn btn-primary"
+              className="btn btn-primary p-2"
               variant={"outline"}
               onClick={() => handleUpdateQuantity(itemQuantity + 1)}
             >
-              <Plus />
+              <Plus className="w-4 h-4"/>
             </Button>
           </div>
         ) : null}
